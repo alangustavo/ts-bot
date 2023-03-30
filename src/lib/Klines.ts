@@ -38,6 +38,9 @@ export default class Klines {
   getCloseTimes(): Array<Date> {
     return this.klines.map((k) => k.closeTime);
   }
+  getTrades(): Array<number> {
+    return this.klines.map((k) => k.trades);
+  }
   getQuotedAssetVolumes(): Array<number> {
     return this.klines.map((k) => k.quotedAssetVolume);
   }
