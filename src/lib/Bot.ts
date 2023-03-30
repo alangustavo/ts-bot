@@ -1,1 +1,3 @@
-export default class Bot {}
+export default class Bot {
+  constructor() {}
+}
