@@ -1,6 +1,6 @@
 import Klines from "./Klines";
-import Observer from "./Observer";
-import Subject from "./Subject";
+import Observer from "./IObserver";
+import Subject from "./ISubject";
 
 export default class DataSource implements Subject {
   symbol: string;

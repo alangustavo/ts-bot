@@ -1,4 +1,4 @@
-import Observer from "./Observer";
+import Observer from "./IObserver";
 
 /**
  * The Subject interface declares a set of methods for managing subscribers.

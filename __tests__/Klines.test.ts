@@ -1,5 +1,6 @@
 import Kline from "../src/lib/Kline";
 import Klines from "../src/lib/Klines";
+import Kline500 from "../testdata/data";
 
 describe("Klines Tests", () => {
   it("Should exists", () => {
@@ -20,17 +21,6 @@ describe("Klines Tests", () => {
     obj.addKline(kline);
     expect(obj.getCloses().length).toEqual(3);
   });
-  /**
-    this.openTime = new Date(Array.isArray(data) ? data[0] : data.t);
-    this.open = parseFloat(Array.isArray(data) ? data[1] : data.o);
-    this.high = parseFloat(Array.isArray(data) ? data[2] : data.h);
-    this.low = parseFloat(Array.isArray(data) ? data[3] : data.l);
-    this.close = parseFloat(Array.isArray(data) ? data[4] : data.c);
-    this.volume = parseFloat(Array.isArray(data) ? data[5] : data.v);
-    this.closeTime = new Date(Array.isArray(data) ? data[6] : data.T);
-    this.quotedAssetVolume = parseFloat(Array.isArray(data) ? data[7] : data.q);
-    this.trades = parseInt(Array.isArray(data) ? data[8] : data.n);
-   */
 
   it("It must return array from klines.", () => {
     const obj = new Klines(3);
@@ -54,5 +44,11 @@ describe("Klines Tests", () => {
     expect(obj.getTrades()).toEqual([8, 8, 8]);
     expect(obj.getTakerBuyBaseAssetVolumes()).toEqual([9, 9, 9]);
     expect(obj.getTakerBuyQuoteAssetVolumes()).toEqual([10, 10, 10]);
+  });
+
+  it("It must load data from multimensional array.", () => {
+    const obj = new Klines(500);
+    obj.addKlinesFromArray(Kline500);
+    expect(obj.getCloses().length).toEqual(500);
   });
 });

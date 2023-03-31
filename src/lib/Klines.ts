@@ -11,6 +11,11 @@ export default class Klines {
     this.klines = new Array<Kline>();
   }
 
+  addKlinesFromArray(array_klines: any[][]): void {
+    array_klines.forEach(async (k) => {
+      await this.addKline(new Kline(k));
+    });
+  }
   addKline(kline: Kline): void {
     this.klines.push(kline);
     if (this.klines.length > this.limit) {
