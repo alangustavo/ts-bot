@@ -16,25 +16,23 @@ export default class DataSource implements Subject {
     this.observers = new Array<Observer>();
   }
   // Attach an observer to the subject.
-  attach(observer: Observer): void {
+  attach(observer: Observer): boolean {
     const isExist = this.observers.includes(observer);
     if (isExist) {
-      return console.log("Subject: Observer has been attached already.");
+      return false;
     }
-
-    console.log("Subject: Attached an observer.");
     this.observers.push(observer);
+    return true;
   }
 
   // Detach an observer from the subject.
-  detach(observer: Observer): void {
+  detach(observer: Observer): boolean {
     const observerIndex = this.observers.indexOf(observer);
     if (observerIndex === -1) {
-      return console.log("Subject: Nonexistent observer.");
+      return false;
     }
-
     this.observers.splice(observerIndex, 1);
-    console.log("Subject: Detached an observer.");
+    return true;
   }
 
   // Notify all observers about an event.
