@@ -10,7 +10,8 @@ abstract class Strategy {
   constructor(indicator: ComplexIndicator) {
     this.indicator = indicator;
   }
-  public abstract getSignal(klines: Klines): Signal;
+  public abstract getBuySignal(klines: Klines): Signal;
+  public abstract getSellSignal(klines: Klines): Signal;
 }
 
 export { Strategy, Signal };

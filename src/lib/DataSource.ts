@@ -40,7 +40,7 @@ export default class DataSource implements Subject {
    * Trigger an update in each subscriber.
    */
   public notify(): void {
-    console.log("Subject: Notifying observers...");
+    // console.log("Subject: Notifying observers...");
     for (const observer of this.observers) {
       observer.update(this.klines);
     }

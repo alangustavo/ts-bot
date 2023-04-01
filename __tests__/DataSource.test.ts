@@ -1,4 +1,3 @@
-import Bot from "../src/lib/Bot";
 import DataSource from "../src/lib/DataSource";
 import Observer from "../src/lib/IObserver";
 import Klines from "../src/lib/Klines";

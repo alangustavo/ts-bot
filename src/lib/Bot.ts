@@ -10,9 +10,14 @@ export default class Bot implements Observer {
     this.inPosition = false;
     this.dataSource = dataSource;
     this.dataSource.attach(this);
+    //@todo Talvez implementar várias stratégias simples para serem testadas em ordem.
     this.strategy = strategy;
   }
   update(klines: Klines): void {
-    // Faz alguma coisa
+    if (!this.inPosition) {
+      this.strategy.getBuySignal(klines);
+    } else {
+      this.strategy.getSellSignal(klines);
+    }
   }
 }
