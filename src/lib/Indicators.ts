@@ -1,8 +1,38 @@
 import { StochasticRSI } from "technicalindicators";
-var talib = require("../../node_modules/talib/build/Release/talib");
+var talib = require("../../node_modules/talib");
 
 const log = console.log;
 export default class Indicators {
+
+  WILLR(
+    highs: number[],
+    lows: number[],
+    closes: number[],
+    period: number = 14
+  ): number[] {
+    const calc = talib.execute({
+      name: "WILLR",
+      high: highs,
+      low: lows,
+      close: closes,
+      startIdx: 0,
+      endIdx: highs.length - 1,
+      optInTimePeriod: period,
+    });
+    console.log();
+    return calc.result.outReal;
+  }
+
+  SMA(closes: number[], period: number = 14): number[] {
+    const calc = talib.execute({
+      name: "SMA",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1,
+      optInTimePeriod: period,
+    });
+    return calc.result.outReal;
+  }
   /**
    * Calculate a Talib Relative Strength Indicator - (Binance Like)
    * @param closes Closes Prices Array

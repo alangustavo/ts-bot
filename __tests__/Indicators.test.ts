@@ -13,6 +13,25 @@ describe("Indicators Tests", () => {
     expect(obj).toBeInstanceOf(Indicators);
   });
 
+  it("Should return a correct Talib WILLR - William %R", () => {
+    const obj = new Indicators();
+    const indicator = obj.WILLR(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      14
+    );
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(-73.80952381);
+  });
+
+  it("Should return a correct Talib SMA - Simple Moving Average", () => {
+    const obj = new Indicators();
+    const indicator = obj.SMA(klines.getCloses(), 99);
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(20.73292929);
+  });
+
   it("Should return a correct Talib RSI", () => {
     const obj = new Indicators();
     const indicator = obj.RSI(klines.getCloses(), 14);
@@ -20,7 +39,7 @@ describe("Indicators Tests", () => {
     expect(i).toBeCloseTo(48.08777259);
   });
 
-  it("Should return a correct TISRI - technicalindicator StochasticRSI", () => {
+  it("Should return a correct TISRSI - technicalindicator StochasticRSI Stochastic Relative Strength Index", () => {
     const obj = new Indicators();
     const indicator = obj.TISRSI(klines.getCloses(), 14, 14, 3);
     const k = indicator.K[indicator.K.length - 1];
