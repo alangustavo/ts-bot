@@ -1,23 +1,29 @@
 import DataSource from "./DataSource";
 import Klines from "./Klines";
-import Observer from "./IObserver";
 import { Strategy } from "./IStrategy";
-export default class Bot implements Observer {
+import { BinanceInterval } from "binance-historical/build/types";
+import HistoricalDataSource from "./HistoricalDataSource";
+import BinanceDataSource from "./BinanceDataSource";
+export default class Bot {
   dataSource: DataSource;
-  inPosition: boolean;
-  strategy: Strategy;
-  constructor(dataSource: DataSource, strategy: Strategy) {
-    this.inPosition = false;
-    this.dataSource = dataSource;
-    this.dataSource.attach(this);
-    //@todo Talvez implementar várias stratégias simples para serem testadas em ordem.
-    this.strategy = strategy;
-  }
-  update(klines: Klines): void {
-    if (!this.inPosition) {
-      this.strategy.getBuySignal(klines);
+
+  constructor(strategy: Strategy, ini?: Date, end?: Date) {
+    // This is a backtest bot?
+    if (typeof ini !== "undefined" && typeof end !== "undefined") {
+      this.dataSource = new HistoricalDataSource(
+        strategy.symbol,
+        strategy.interval,
+        ini,
+        end
+      );
+      // This is a real data bot
     } else {
-      this.strategy.getSellSignal(klines);
+      this.dataSource = new BinanceDataSource(
+        strategy.symbol,
+        strategy.interval
+      );
     }
+    this.dataSource.attach(strategy);
   }
+  update(_klines: Klines): void {}
 }

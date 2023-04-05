@@ -1,9 +1,7 @@
 import { getKline, Kline as HistoricalKline } from "binance-historical";
-
 import { BinanceInterval } from "binance-historical/build/types";
 import db from "./db";
 import KlineTable from "./KlineTable";
-import Klines from "./Klines";
 
 export default class HistoricalKlines {
   symbol: string;
@@ -28,6 +26,7 @@ export default class HistoricalKlines {
     new KlineTable(this.table);
     this.getHistoricalKlinesFromBinance();
   }
+
   async start() {
     const ini = this.ini.getTime();
     const end = this.end.getTime();
@@ -36,16 +35,18 @@ export default class HistoricalKlines {
     return stmt;
   }
 
-  async getHistoricalKlinesFromBinance() {
+  /* Istanbul ignore next */ async /* Istanbul ignore next */ getHistoricalKlinesFromBinance /* Istanbul ignore next */() /* Istanbul ignore next */ {
     const ini = this.ini.getTime();
     const end = this.end.getTime();
-    // console.log(ini, end);
     const stmt = db.prepare(
       `SELECT COUNT(*) AS "count" FROM ${this.table}
       WHERE openTime = ${ini} OR openTime = ${end};`
     );
     const count = stmt.get();
     if (count.count != 2) {
+      /* Istanbul ignore next */
+      console.log("Get Historical Data From Binance...");
+      /* Istanbul ignore next */
       const klines: Array<HistoricalKline> = await getKline(
         this.symbol,
         this.interval,
@@ -53,6 +54,7 @@ export default class HistoricalKlines {
         this.end
       );
 
+      console.log("Saving Data into Database...");
       let sql = `INSERT OR IGNORE INTO ${this.table}
               (openTime, open, high, low, close, closeTime,
                 volume, quotedAssetVolume, trades, takerBuyBaseAssetVolume,
@@ -65,6 +67,7 @@ export default class HistoricalKlines {
       });
       sql = sql.slice(0, -1);
       db.exec(sql);
+      console.log("The data has been saved in the database!");
     }
   }
 }

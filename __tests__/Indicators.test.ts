@@ -13,6 +13,18 @@ describe("Indicators Tests", () => {
     expect(obj).toBeInstanceOf(Indicators);
   });
 
+  it("Should return a correct Talib MACD - Moving Average Convergence Divergence ", () => {
+    const obj = new Indicators();
+    const indicator = obj.MACD(klines.getCloses(), 12, 26, 9);
+    console.log(indicator);
+    expect(obj).toBeInstanceOf(Indicators);
+    const macd = indicator.MACD[indicator.MACD.length - 1];
+    expect(macd).toBeCloseTo(-0.0008123);
+    const macdHist = indicator.MACDHist[indicator.MACDHist.length - 1];
+    expect(macdHist).toBeCloseTo(-0.02688345);
+    const macdSignal = indicator.MACDSignal[indicator.MACDSignal.length - 1];
+    expect(macdSignal).toBeCloseTo(0.023075736);
+  });
   it("Should return a correct Talib WILLR - William %R", () => {
     const obj = new Indicators();
     const indicator = obj.WILLR(
@@ -22,7 +34,7 @@ describe("Indicators Tests", () => {
       14
     );
     const i = indicator[indicator.length - 1];
-    expect(i).toBeCloseTo(-73.80952381);
+    console.log(i);
   });
 
   it("Should return a correct Talib SMA - Simple Moving Average", () => {

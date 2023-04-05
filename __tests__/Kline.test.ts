@@ -69,4 +69,32 @@ describe("Kline Tests", () => {
     expect(obj.takerBuyBaseAssetVolume).toEqual(2625.58);
     expect(obj.takerBuyQuoteAssetVolume).toEqual(54535.3075);
   });
+
+  const objFromDatabase = {
+    openTime: 1611964800000,
+    open: 3.8301,
+    high: 3.8995,
+    low: 3.8136,
+    close: 3.895,
+    closeTime: 1611965699999,
+    volume: 46867.97,
+    quotedAssetVolume: 181042.318636,
+    trades: 905,
+    takerBuyBaseAssetVolume: 24915.85,
+    takerBuyQuoteAssetVolume: 96347.377683,
+  };
+  it("Should be constructed by object from binance Historical Data", () => {
+    const obj = new Kline(objFromDatabase);
+    expect(obj.openTime).toEqual(new Date(1611964800000));
+    expect(obj.open).toEqual(3.8301);
+    expect(obj.high).toEqual(3.8995);
+    expect(obj.low).toEqual(3.8136);
+    expect(obj.close).toEqual(3.895);
+    expect(obj.volume).toEqual(46867.97);
+    expect(obj.closeTime).toEqual(new Date(1611965699999));
+    expect(obj.quotedAssetVolume).toEqual(181042.318636);
+    expect(obj.trades).toEqual(905);
+    expect(obj.takerBuyBaseAssetVolume).toEqual(24915.85);
+    expect(obj.takerBuyQuoteAssetVolume).toEqual(96347.377683);
+  });
 });

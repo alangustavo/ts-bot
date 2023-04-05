@@ -3,6 +3,27 @@ var talib = require("../../node_modules/talib");
 
 const log = console.log;
 export default class Indicators {
+  MACD(
+    closes: number[],
+    fastPeriod: number,
+    slowPeriod: number,
+    signalPeriod: number
+  ): { MACD: number[]; MACDSignal: number[]; MACDHist: number[] } {
+    const calc = talib.execute({
+      name: "MACD",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1,
+      optInFastPeriod: fastPeriod,
+      optInSlowPeriod: slowPeriod,
+      optInSignalPeriod: signalPeriod,
+    });
+    return {
+      MACD: calc.result.outMACD,
+      MACDSignal: calc.result.outMACDSignal,
+      MACDHist: calc.result.outMACDHist,
+    };
+  }
 
   WILLR(
     highs: number[],
@@ -19,7 +40,7 @@ export default class Indicators {
       endIdx: highs.length - 1,
       optInTimePeriod: period,
     });
-    console.log();
+    // console.log();
     return calc.result.outReal;
   }
 

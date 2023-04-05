@@ -1,13 +1,16 @@
+import CSVFile from "./CSVFile";
 import Observer from "./IObserver";
 import Indicators from "./Indicators";
 import Klines from "./Klines";
+import { BinanceInterval } from "binance-historical/build/types";
 
 enum Signal {
-  BUY,
-  SELL,
-  WAIT,
-  STOPGAIN,
-  STOPLOSS,
+  BUY = "BUY",
+  SELL = "SELL",
+  WAITBUY = "WAIT BUY",
+  WAITSELL = "WAIT SELL",
+  STOPGAIN = "STOPGAIN",
+  STOPLOSS = "STOPLOSS",
 }
 abstract class Strategy implements Observer {
   indicator: Indicators;
@@ -15,7 +18,14 @@ abstract class Strategy implements Observer {
   buyPrice: number;
   result: number;
   inPosition: boolean;
-  constructor() {
+  symbol: string;
+  interval: BinanceInterval;
+  csvFile: CSVFile;
+  constructor(symbol: string, interval: BinanceInterval) {
+    this.symbol = symbol;
+    this.interval = interval;
+    this.csvFile = new CSVFile(symbol, interval, this.constructor.name);
+    this.getHeader();
     this.indicator = new Indicators();
     this.inPosition = false;
     this.buyPrice = 0;
@@ -23,6 +33,11 @@ abstract class Strategy implements Observer {
   }
   abstract update(klines: Klines): void;
   public abstract calculate(klines: Klines): void;
+  /**
+   * "PLEASE WRITE A FILE HEADER FOR YOUR CSV.";
+   * @returns a Strategy Description and Fields.
+   */
+  public abstract getHeader(): void;
 }
 
 export { Strategy, Signal };
