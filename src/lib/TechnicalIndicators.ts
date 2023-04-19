@@ -1,8 +1,7 @@
 import { StochasticRSI } from "technicalindicators";
 var talib = require("../../node_modules/talib");
 
-const log = console.log;
-export default class Indicators {
+export default class TechnicalIndicators {
   MACD(
     closes: number[],
     fastPeriod: number,

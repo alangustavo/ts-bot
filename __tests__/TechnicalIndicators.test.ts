@@ -1,4 +1,4 @@
-import Indicators from "../src/lib/Indicators";
+import TechnicalIndicators from "../src/lib/TechnicalIndicators";
 import Klines from "../src/lib/Klines";
 import Kline500 from "../testdata/data";
 
@@ -9,14 +9,14 @@ klines.addKlinesFromArray(Kline500);
 
 describe("Indicators Tests", () => {
   it("Should exists", () => {
-    const obj = new Indicators();
-    expect(obj).toBeInstanceOf(Indicators);
+    const obj = new TechnicalIndicators();
+    expect(obj).toBeInstanceOf(TechnicalIndicators);
   });
 
   it("Should return a correct Array from Talib MACD - Moving Average Convergence Divergence ", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.MACD(klines.getCloses(), 12, 26, 9);
-    expect(obj).toBeInstanceOf(Indicators);
+    expect(obj).toBeInstanceOf(TechnicalIndicators);
     const macd = indicator.MACD[indicator.MACD.length - 1];
     expect(macd).toBeCloseTo(-0.0008123);
     const macdHist = indicator.MACDHist[indicator.MACDHist.length - 1];
@@ -25,7 +25,7 @@ describe("Indicators Tests", () => {
     expect(macdSignal).toBeCloseTo(0.023075736);
   });
   it("Should return a correct Indicator Talib MACD - Moving Average Convergence Divergence", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:45:00 <<<<<
     let indicator = obj.macd(klines.getCloses(), 12, 26, 9, -1);
     expect(indicator.MACD).toBeCloseTo(-0.0008123);
@@ -39,7 +39,7 @@ describe("Indicators Tests", () => {
   });
 
   it("Should return a correct Talib WILLR - William %R", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.WILLR(
       klines.getHighs(),
       klines.getLows(),
@@ -51,21 +51,21 @@ describe("Indicators Tests", () => {
   });
 
   it("Should return a correct Talib SMA - Simple Moving Average", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.SMA(klines.getCloses(), 99);
     const i = indicator[indicator.length - 1];
     expect(i).toBeCloseTo(20.73292929);
   });
 
   it("Should return a correct Talib RSI", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.RSI(klines.getCloses(), 14);
     const i = indicator[indicator.length - 1];
     expect(i).toBeCloseTo(48.08777259);
   });
 
   it("Should return a correct TISRSI - technicalindicator StochasticRSI Stochastic Relative Strength Index", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.TISRSI(klines.getCloses(), 14, 14, 3);
     const k = indicator.K[indicator.K.length - 1];
     const d = indicator.D[indicator.D.length - 1];
@@ -77,7 +77,7 @@ describe("Indicators Tests", () => {
   });
 
   it("Should return a correct Talib StochRSI", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.STOCHRSI(klines.getCloses(), 14, 14, 3, 3);
     const k = indicator.K[indicator.K.length - 1];
     const d = indicator.D[indicator.D.length - 1];
@@ -86,7 +86,7 @@ describe("Indicators Tests", () => {
   });
 
   it("Should return a correct Talib Stoch", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.STOCH(
       klines.getHighs(),
       klines.getLows(),
@@ -104,7 +104,7 @@ describe("Indicators Tests", () => {
   });
 
   it("Should return a correct Talib Chaikin Oscilator (ADOSC)", () => {
-    const obj = new Indicators();
+    const obj = new TechnicalIndicators();
     const indicator = obj.ADOSC(
       klines.getHighs(),
       klines.getLows(),

@@ -1,6 +1,6 @@
 import CSVFile from "./CSVFile";
 import Observer from "./IObserver";
-import Indicators from "./Indicators";
+import TechinicalIndicators from "./TechnicalIndicators";
 import Klines from "./Klines";
 import { BinanceInterval } from "binance-historical/build/types";
 
@@ -13,7 +13,7 @@ enum Signal {
   STOPLOSS = "STOPLOSS",
 }
 abstract class Strategy implements Observer {
-  indicator: Indicators;
+  indicator: TechinicalIndicators;
   klines!: Klines;
   buyPrice: number;
   result: number;
@@ -26,7 +26,7 @@ abstract class Strategy implements Observer {
     this.interval = interval;
     this.csvFile = new CSVFile(symbol, interval, this.constructor.name);
     this.getHeader();
-    this.indicator = new Indicators();
+    this.indicator = new TechinicalIndicators();
     this.inPosition = false;
     this.buyPrice = 0;
     this.result = 1;
