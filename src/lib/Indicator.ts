@@ -1,38 +1,63 @@
 import { BinanceInterval } from "binance-historical/build/types";
 import sqlite from "better-sqlite3";
+import Observer from "./IObserver";
+import Klines from "./Klines";
 const db = sqlite("./data/indicators.db");
 
-export default abstract class Indicator {
-    private interval: string;
-    private symbol: string;
-    private tableCreated = false
-    
-    constructor(symbol:string, interval: BinanceInterval) {
-        this.symbol = symbol;
-        this.interval = interval;
+export default abstract class Indicator implements Observer {
+    private _interval: string;
+    private _symbol: string;
+    private _tableCreated = false
+    private id!: number;
+
+    constructor(symbol: string, interval: BinanceInterval) {
+        this._symbol = symbol;
+        this._interval = interval;
     }
 
     getTableName(): string {
-        return `${this.constructor.name}_${this.symbol}_${this.interval}`;
+        return `${this.constructor.name}_${this._symbol}_${this._interval}`;
     }
 
-    getFields(): string[] {
-        return Object.keys(this);
-    }
-
-    getValues(): number[] {
-        return Object.values(this);
+    getData(): any {
+        let n: any = {};
+        for (const [key, value] of Object.entries(this)) {
+            if (typeof key == "string" && key[0] != "_") {
+                n[key] = value;
+            }
+        }
+        return n;
     }
 
     createTable(): void {
-        if(!this.tableCreated)
-        db.prepare("DROP TABLE " + this.getTableName() + "; CREATE TABLE " + this.getTableName() + " (" + this.getFields().join(" FLOAT,") + " FLOAT)").run();
-        this.tableCreated = true;
+        if (!this._tableCreated) {
+            let data = this.getData();
+            let fields = Object.keys(data);
+            let sql = "DROP TABLE IF EXISTS " + this.getTableName();
+            db.prepare(sql).run();
+            sql = "CREATE TABLE " + this.getTableName() + " (" + fields.join(" FLOAT,") + " FLOAT)";
+            db.prepare(sql).run();
+            this._tableCreated = true;
+        }
+    }
+    update(klines: Klines): void {
+        this.calculate(klines);
+        this.id = klines.getId();
+        if (!this._tableCreated) {
+            this.createTable()
+            this._tableCreated = true
+        }
+        this.save();
+    }
+    save(): void {
+        let data = this.getData();
+        let fields = Object.keys(data);
+        let values = Object.values(data)
+        let sql = "INSERT INTO " + this.getTableName() + " (" + fields.join(",") + ") VALUES (" + values.join(",") + ")";
+        db.prepare(sql).run();
     }
 
-    save(): void {
-        db.prepare("INSERT INTO " + this.getTableName() + " (" + this.getFields().join(",") + ") VALUES (" + this.getValues().join(",") + ")").run();
-    }   
+    abstract calculate(klines: Klines): void;
 
 
 }
