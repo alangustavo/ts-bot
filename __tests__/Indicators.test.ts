@@ -13,10 +13,9 @@ describe("Indicators Tests", () => {
     expect(obj).toBeInstanceOf(Indicators);
   });
 
-  it("Should return a correct Talib MACD - Moving Average Convergence Divergence ", () => {
+  it("Should return a correct Array from Talib MACD - Moving Average Convergence Divergence ", () => {
     const obj = new Indicators();
     const indicator = obj.MACD(klines.getCloses(), 12, 26, 9);
-    console.log(indicator);
     expect(obj).toBeInstanceOf(Indicators);
     const macd = indicator.MACD[indicator.MACD.length - 1];
     expect(macd).toBeCloseTo(-0.0008123);
@@ -25,6 +24,20 @@ describe("Indicators Tests", () => {
     const macdSignal = indicator.MACDSignal[indicator.MACDSignal.length - 1];
     expect(macdSignal).toBeCloseTo(0.023075736);
   });
+  it("Should return a correct Indicator Talib MACD - Moving Average Convergence Divergence", () => {
+    const obj = new Indicators();
+    // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:45:00 <<<<<
+    let indicator = obj.macd(klines.getCloses(), 12, 26, 9, -1);
+    expect(indicator.MACD).toBeCloseTo(-0.0008123);
+    expect(indicator.MACDHist).toBeCloseTo(-0.02688345);
+    expect(indicator.MACDSignal).toBeCloseTo(0.023075736);
+    // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:30:00 <<<<<
+    indicator = obj.macd(klines.getCloses(), 12, 26, 9, -2);
+    expect(indicator.MACDHist).toBeCloseTo(-0.02688345);
+    expect(indicator.MACD).toBeCloseTo(0.00216402);
+    expect(indicator.MACDSignal).toBeCloseTo(0.02904747);
+  });
+
   it("Should return a correct Talib WILLR - William %R", () => {
     const obj = new Indicators();
     const indicator = obj.WILLR(

@@ -25,6 +25,20 @@ export default class Indicators {
     };
   }
 
+  macd(
+    closes: number[],
+    fastPeriod: number,
+    slowPeriod: number,
+    signalPeriod: number,
+    index:number = -1
+  ): { MACD: number; MACDSignal: number; MACDHist: number }{
+    let i = this.MACD(closes,fastPeriod,slowPeriod,signalPeriod);
+    if(index < 0 ) {
+      index += i.MACD.length;
+    }
+    return {MACD: i.MACD[index], MACDHist: i.MACDHist[index], MACDSignal: i.MACDSignal[index] };
+  }
+  
   WILLR(
     highs: number[],
     lows: number[],
