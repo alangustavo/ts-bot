@@ -1,5 +1,5 @@
-import { Signal, Strategy } from "../lib/IStrategy";
-import Klines from "../lib/Klines";
+import { Signal, Strategy } from "../src/lib/IStrategy";
+import Klines from "../src/lib/Klines";
 
 export default class AllStrategy extends Strategy {
   private avgTIRSI!: number;

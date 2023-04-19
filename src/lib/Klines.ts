@@ -55,4 +55,9 @@ export default class Klines {
   getTakerBuyQuoteAssetVolumes(): Array<number> {
     return this.klines.map((k) => k.takerBuyQuoteAssetVolume);
   }
+
+  getId():number{
+    const op = this.getOpenTimes();
+    return op[op.length - 1].getTime();
+  }
 }

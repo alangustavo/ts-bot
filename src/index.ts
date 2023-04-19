@@ -3,7 +3,7 @@ import AVGTIRSI_SMA25SMA7 from "./indicators/AVGTIRSI_SMA25SMA7";
 import AVGTIRSI_SMA25SMA7STOP from "./indicators/AVGTIRSI_SMA25SMA7STOP";
 import AVGTIRSI_SMA25SMA7WILLR70STOP from "./indicators/AVGTIRSI_SMA25SMA7WILLR70STOP";
 import AVGTIRSI_SMA25SMA7WILLR90STOP from "./indicators/AVGTIRSI_SMA25SMA7WILLR90STOP";
-import AllStrategy from "./indicators/AllStrategy";
+import AllStrategy from "../WAIT/AllStrategy";
 import AvgTIRSIM25M7 from "./indicators/AvgTIRSIM25M7";
 import AvgTIRSIM25M7W11 from "./indicators/AvgTIRSIM25M7W11";
 import AvgTIRSM99 from "./indicators/AvgTIRSM99";
