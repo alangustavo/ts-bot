@@ -55,14 +55,72 @@ describe("Indicators Tests", () => {
     const i = indicator[indicator.length - 1];
     expect(i).toBeCloseTo(20.73292929);
   });
+  it("Should return a correct value of Talib SMA - Simple Moving Average (SMA)", () => {
 
-  it("Should return a correct Talib RSI", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.sma(klines.getCloses(), 9, -1);
+    // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:45:00 <<<<<
+    expect(indicator).toBeCloseTo(21.05333333);
+    indicator = obj.sma(klines.getCloses(), 9, -2);
+    expect(indicator).toBeCloseTo(21.0511111);
+  });
+  it("Should return a correct Talib EMA - Exponencial Moving Average", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.EMA(klines.getCloses(), 99);
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(20.85754898);
+  });
+  it("Should return a correct value of Talib EMA - Exponencial Moving Average (EMA)", () => {
+
+    const obj = new TechnicalIndicators();
+    let indicator = obj.ema(klines.getCloses(), 9, -1);
+    // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:45:00 <<<<<
+    expect(indicator).toBeCloseTo(21.04880765);
+    indicator = obj.ema(klines.getCloses(), 9, -2);
+    expect(indicator).toBeCloseTo(21.05350956);
+  });
+  it("Should return a correct Talib DEMA - Double Exponencial Moving Average", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.DEMA(klines.getCloses(), 99);
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(21.01563807);
+  });
+  it("Should return a correct value of Talib DEMA - Double Exponencial Moving Average (DEMA)", () => {
+
+    const obj = new TechnicalIndicators();
+    let indicator = obj.dema(klines.getCloses(), 9, -1);
+    // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:45:00 <<<<<
+    expect(indicator).toBeCloseTo(21.01561029);
+    indicator = obj.dema(klines.getCloses(), 9, -2);
+    expect(indicator).toBeCloseTo(21.01671477);
+  });
+  it("Should return a correct Talib TEMA - Triple Exponencial Moving Average", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.TEMA(klines.getCloses(), 99);
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(21.15953758);
+  });
+  it("Should return a correct value of Talib TEMA - Triple Exponencial Moving Average (DEMA)", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.tema(klines.getCloses(), 9, -1);
+    // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:45:00 <<<<<
+    expect(indicator).toBeCloseTo(21.01013371);
+    indicator = obj.tema(klines.getCloses(), 9, -2);
+    expect(indicator).toBeCloseTo(21.00627162);
+  });
+  it("Should return a correct  Array of Talib RSI", () => {
     const obj = new TechnicalIndicators();
     const indicator = obj.RSI(klines.getCloses(), 14);
     const i = indicator[indicator.length - 1];
     expect(i).toBeCloseTo(48.08777259);
   });
-
+  it("Should return a correct value Talib RSI", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.rsi(klines.getCloses(), 9);
+    expect(indicator).toBeCloseTo(45.31040163);
+    indicator = obj.rsi(klines.getCloses(), 9, -2);
+    expect(indicator).toBeCloseTo(46.29715778);
+  });
   it("Should return a correct TISRSI - technicalindicator StochasticRSI Stochastic Relative Strength Index", () => {
     const obj = new TechnicalIndicators();
     const indicator = obj.TISRSI(klines.getCloses(), 14, 14, 3);

@@ -7,7 +7,7 @@ export default class TechnicalIndicators {
     fastPeriod: number,
     slowPeriod: number,
     signalPeriod: number
-  ): { MACD: number[]; MACDSignal: number[]; MACDHist: number[] } {
+  ): { MACD: number[]; MACDSignal: number[]; MACDHist: number[]; } {
     const calc = talib.execute({
       name: "MACD",
       inReal: closes,
@@ -30,7 +30,7 @@ export default class TechnicalIndicators {
     slowPeriod: number,
     signalPeriod: number,
     index: number = -1
-  ): { MACD: number; MACDSignal: number; MACDHist: number } {
+  ): { MACD: number; MACDSignal: number; MACDHist: number; } {
     let i = this.MACD(closes, fastPeriod, slowPeriod, signalPeriod);
     if (index < 0) {
       index += i.MACD.length;
@@ -92,6 +92,43 @@ export default class TechnicalIndicators {
     }
     return i[index];
   }
+
+  DEMA(closes: number[], period: number = 14): number[] {
+    const calc = talib.execute({
+      name: "DEMA",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1,
+      optInTimePeriod: period,
+    });
+    return calc.result.outReal;
+  }
+  dema(closes: number[], period: number, index: number = -1): number {
+    let i = this.DEMA(closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+  TEMA(closes: number[], period: number = 14): number[] {
+    const calc = talib.execute({
+      name: "TEMA",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1,
+      optInTimePeriod: period,
+    });
+    return calc.result.outReal;
+  }
+  tema(closes: number[], period: number, index: number = -1): number {
+    let i = this.TEMA(closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
   /**
    * Calculate a Talib Relative Strength Indicator - (Binance Like)
    * @param closes Closes Prices Array
@@ -108,6 +145,14 @@ export default class TechnicalIndicators {
     });
     return calc.result.outReal;
   }
+
+  rsi(closes: number[], period: number, index: number = -1): number {
+    let i = this.RSI(closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
   /**
    * Calculate a technicalindicators library Stochastic Relative Strength Indicator (Diferent from Binance)
    * @param closes Closes Prices Array
@@ -123,7 +168,7 @@ export default class TechnicalIndicators {
     stochasticPeriod = 14,
     kPeriod = 3,
     dPeriod = 3
-  ): { K: number[]; D: number[]; stochRSI: number[] } {
+  ): { K: number[]; D: number[]; stochRSI: number[]; } {
     let inputSRSI = {
       values: closes,
       rsiPeriod: rsiPeriod,
@@ -153,7 +198,7 @@ export default class TechnicalIndicators {
     lengthStock: number = 14,
     smoothK: number = 3,
     smoothD: number = 3
-  ): { K: number[]; D: number[] } {
+  ): { K: number[]; D: number[]; } {
     const rsi = this.RSI(closes, lengthRSI);
     return this.STOCH(rsi, rsi, rsi, lengthStock, smoothK, smoothD, 0, 0);
   }
@@ -179,7 +224,7 @@ export default class TechnicalIndicators {
     slowDPeriod: number = 3,
     slowK_MAType = 3,
     slowD_MAType = 3
-  ): { K: number[]; D: number[] } {
+  ): { K: number[]; D: number[]; } {
     const calc = talib.execute({
       name: "STOCH",
       high: highs,

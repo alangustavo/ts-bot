@@ -52,10 +52,17 @@ describe("Klines Tests", () => {
     expect(obj.getCloses().length).toEqual(500);
   });
 
-  
+
   it("It must return the last Milisseconds ID.", () => {
     const obj = new Klines(500);
     obj.addKlinesFromArray(Kline500);
     expect(obj.getId()).toEqual(1680320700000);
+  });
+
+
+  it("It must return the last close as Price.", () => {
+    const obj = new Klines(500);
+    obj.addKlinesFromArray(Kline500);
+    expect(obj.getPrice()).toEqual(21.03);
   });
 });
