@@ -3,19 +3,21 @@ import { BinanceInterval } from "binance-historical/build/types";
 import db from "./db";
 import KlineTable from "./KlineTable";
 
-export default class HistoricalKlines {
+export default class BinanceHistoricalKlines {
   symbol: string;
   interval: BinanceInterval;
   ini: Date;
   end: Date;
   table: string;
   limit: number;
+  dbpath: string;
   constructor(
     symbol: string,
     interval: BinanceInterval,
     ini: Date,
     end: Date,
-    limit = 500
+    limit = 500,
+    dbpath = "./data/ts-bot.db"
   ) {
     this.symbol = symbol;
     this.interval = interval;
@@ -23,11 +25,12 @@ export default class HistoricalKlines {
     this.end = end;
     this.table = `${symbol}_${interval}`;
     this.limit = limit;
+    this.dbpath = dbpath;
     new KlineTable(this.table);
-    this.getHistoricalKlinesFromBinance();
   }
 
   async start() {
+    await this.getHistoricalKlinesFromBinance();
     const ini = this.ini.getTime();
     const end = this.end.getTime();
     const sql = `SELECT * FROM ${this.table} WHERE openTime >= ${ini} AND openTime <= ${end} ORDER BY openTime;`;
@@ -35,25 +38,14 @@ export default class HistoricalKlines {
     return stmt;
   }
 
-  /* Istanbul ignore next */ async /* Istanbul ignore next */ getHistoricalKlinesFromBinance /* Istanbul ignore next */() /* Istanbul ignore next */ {
-    const ini = this.ini.getTime();
-    const end = this.end.getTime();
-    const stmt = db.prepare(
-      `SELECT COUNT(*) AS "count" FROM ${this.table}
-      WHERE openTime = ${ini} OR openTime = ${end};`
+  private async getHistoricalKlinesFromService() {
+    const klines: Array<HistoricalKline> = await getKline(
+      this.symbol,
+      this.interval,
+      this.ini,
+      this.end
     );
-    const count = stmt.get();
-    if (count.count != 2) {
-      /* Istanbul ignore next */
-      console.log("Get Historical Data From Binance...");
-      /* Istanbul ignore next */
-      const klines: Array<HistoricalKline> = await getKline(
-        this.symbol,
-        this.interval,
-        this.ini,
-        this.end
-      );
-
+    if (klines.length > 0) {
       console.log("Saving Data into Database...");
       let sql = `INSERT OR IGNORE INTO ${this.table}
               (openTime, open, high, low, close, closeTime,
@@ -68,6 +60,22 @@ export default class HistoricalKlines {
       sql = sql.slice(0, -1);
       db.exec(sql);
       console.log("The data has been saved in the database!");
+    } else {
+      console.log("No Historical Data From Binance in Period.");
+    }
+
+  }
+
+  async getHistoricalKlinesFromBinance() {
+    const ini = this.ini.getTime();
+    const end = this.end.getTime();
+    const stmt = await db.prepare(
+      `SELECT * FROM ${this.table}
+      WHERE openTime = ${ini} OR openTime = ${end};`
+    ).all();
+
+    if (stmt.length != 2) {
+      await this.getHistoricalKlinesFromService();
     }
   }
 }

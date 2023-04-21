@@ -7,10 +7,11 @@ import { BinanceInterval } from "binance-historical/build/types";
 enum Signal {
   BUY = "BUY",
   SELL = "SELL",
+  WAIT = "WAIT",
   WAITBUY = "WAIT BUY",
   WAITSELL = "WAIT SELL",
-  STOPGAIN = "STOPGAIN",
-  STOPLOSS = "STOPLOSS",
+  STOPGAIN = "STOP GAIN",
+  STOPLOSS = "STOP LOSS",
 }
 abstract class Strategy implements Observer {
   indicator: TechinicalIndicators;

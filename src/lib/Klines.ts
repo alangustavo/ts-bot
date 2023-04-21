@@ -56,8 +56,13 @@ export default class Klines {
     return this.klines.map((k) => k.takerBuyQuoteAssetVolume);
   }
 
-  getId():number{
+  getId(): number {
     const op = this.getOpenTimes();
     return op[op.length - 1].getTime();
+  }
+
+  getPrice(): number {
+    const price = this.getCloses();
+    return price[price.length - 1];
   }
 }

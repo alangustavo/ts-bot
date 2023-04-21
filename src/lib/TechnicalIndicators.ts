@@ -29,15 +29,15 @@ export default class TechnicalIndicators {
     fastPeriod: number,
     slowPeriod: number,
     signalPeriod: number,
-    index:number = -1
-  ): { MACD: number; MACDSignal: number; MACDHist: number }{
-    let i = this.MACD(closes,fastPeriod,slowPeriod,signalPeriod);
-    if(index < 0 ) {
+    index: number = -1
+  ): { MACD: number; MACDSignal: number; MACDHist: number } {
+    let i = this.MACD(closes, fastPeriod, slowPeriod, signalPeriod);
+    if (index < 0) {
       index += i.MACD.length;
     }
-    return {MACD: i.MACD[index], MACDHist: i.MACDHist[index], MACDSignal: i.MACDSignal[index] };
+    return { MACD: i.MACD[index], MACDHist: i.MACDHist[index], MACDSignal: i.MACDSignal[index] };
   }
-  
+
   WILLR(
     highs: number[],
     lows: number[],
@@ -66,6 +66,31 @@ export default class TechnicalIndicators {
       optInTimePeriod: period,
     });
     return calc.result.outReal;
+  }
+  sma(closes: number[], period: number = 14, index: number = -1): number {
+    let i = this.SMA(closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+  EMA(closes: number[], period: number = 14): number[] {
+    const calc = talib.execute({
+      name: "EMA",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1,
+      optInTimePeriod: period,
+    });
+    return calc.result.outReal;
+  }
+  ema(closes: number[], period: number, index: number = -1): number {
+    let i = this.EMA(closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
   }
   /**
    * Calculate a Talib Relative Strength Indicator - (Binance Like)
@@ -193,4 +218,18 @@ export default class TechnicalIndicators {
     });
     return calc.result.outReal;
   }
+  adosc(highs: number[],
+    lows: number[],
+    closes: number[],
+    volumes: number[],
+    short: number,
+    long: number,
+    index: number = -1): number {
+    let i = this.ADOSC(highs, lows, closes, volumes, short, long);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
 }

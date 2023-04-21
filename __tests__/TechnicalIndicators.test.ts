@@ -47,7 +47,6 @@ describe("Indicators Tests", () => {
       14
     );
     const i = indicator[indicator.length - 1];
-    console.log(i);
   });
 
   it("Should return a correct Talib SMA - Simple Moving Average", () => {
@@ -103,7 +102,7 @@ describe("Indicators Tests", () => {
     expect(d).toBeCloseTo(26.98412698, 8);
   });
 
-  it("Should return a correct Talib Chaikin Oscilator (ADOSC)", () => {
+  it("Should return a correct Array Talib Chaikin Oscilator (ADOSC)", () => {
     const obj = new TechnicalIndicators();
     const indicator = obj.ADOSC(
       klines.getHighs(),
@@ -115,9 +114,26 @@ describe("Indicators Tests", () => {
     );
     const i = indicator[indicator.length - 1];
     expect(i).toBeCloseTo(-23890.33581591);
-    // const k = indicator.K[indicator.K.length - 1];
-    // const d = indicator.D[indicator.D.length - 1];
-    // expect(k).toBeCloseTo(26.19047619, 8);
-    // expect(d).toBeCloseTo(26.98412698, 8);
+  });
+  it("Should return a correct value of Talib Chaikin Oscilator (ADOSC)", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.adosc(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      klines.getVolumes(),
+      3,
+      10, -1
+    );
+    expect(indicator).toBeCloseTo(-23890.33581591);
+    indicator = obj.adosc(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      klines.getVolumes(),
+      3,
+      10, -2
+    );
+    expect(indicator).toBeCloseTo(-27881.41588055);
   });
 });

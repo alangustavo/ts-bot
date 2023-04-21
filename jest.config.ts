@@ -125,7 +125,7 @@ export default {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ["dotenv/config"],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],
@@ -183,3 +183,6 @@ export default {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
+process.env = Object.assign(process.env, {
+  DATABASE_URL: 'test.db',
+});
