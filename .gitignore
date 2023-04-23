@@ -105,4 +105,7 @@ dist
 
 *.csv
 
+
 indicators.db
+.db-shm
+.db-wal
