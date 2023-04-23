@@ -4,26 +4,27 @@ import { Strategy } from "./IStrategy";
 import { BinanceInterval } from "binance-historical/build/types";
 import HistoricalDataSource from "./HistoricalDataSource";
 import BinanceDataSource from "./BinanceDataSource";
+import Indicator from "./Indicator";
 export default class Bot {
   dataSource: DataSource;
 
-  constructor(strategy: Strategy, ini?: Date, end?: Date) {
+  constructor(indicator: Indicator, ini?: Date, end?: Date) {
     // This is a backtest bot?
     if (typeof ini !== "undefined" && typeof end !== "undefined") {
       this.dataSource = new HistoricalDataSource(
-        strategy.symbol,
-        strategy.interval,
+        indicator.getSymbol(),
+        indicator.getInterval(),
         ini,
         end
       );
       // This is a real data bot
     } else {
       this.dataSource = new BinanceDataSource(
-        strategy.symbol,
-        strategy.interval
+        indicator.getSymbol(),
+        indicator.getInterval(),
       );
     }
-    this.dataSource.attach(strategy);
+    this.dataSource.attach(indicator);
   }
-  update(_klines: Klines): void {}
+  update(_klines: Klines): void { }
 }

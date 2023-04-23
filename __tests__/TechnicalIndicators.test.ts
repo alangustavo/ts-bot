@@ -38,7 +38,7 @@ describe("Indicators Tests", () => {
     expect(indicator.MACDSignal).toBeCloseTo(0.02904747);
   });
 
-  it("Should return a correct Talib WILLR - William %R", () => {
+  it("Should return a correct array of Talib WILLR - William %R", () => {
     const obj = new TechnicalIndicators();
     const indicator = obj.WILLR(
       klines.getHighs(),
@@ -47,6 +47,16 @@ describe("Indicators Tests", () => {
       14
     );
     const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(-73.80952381);
+  });
+  it("Should return a correct value of Talib WILLR William %R", () => {
+
+    const obj = new TechnicalIndicators();
+    let indicator = obj.willr(klines.getHighs(), klines.getLows(), klines.getCloses(), 99);
+    // Tests Are From SOLUSDT 15m Last OpenDate: 1 April 2023 03:45:00 <<<<<
+    expect(indicator).toBeCloseTo(-31.72413793);
+    indicator = obj.willr(klines.getHighs(), klines.getLows(), klines.getCloses(), 99, -2);
+    expect(indicator).toBeCloseTo(-31.03448276);
   });
 
   it("Should return a correct Talib SMA - Simple Moving Average", () => {
@@ -133,7 +143,7 @@ describe("Indicators Tests", () => {
     expect(s).toBeCloseTo(33.059087509, 8);
   });
 
-  it("Should return a correct Talib StochRSI", () => {
+  it("Should return a correct Talib StochRSI (STOCHRSI)", () => {
     const obj = new TechnicalIndicators();
     const indicator = obj.STOCHRSI(klines.getCloses(), 14, 14, 3, 3);
     const k = indicator.K[indicator.K.length - 1];
@@ -142,24 +152,33 @@ describe("Indicators Tests", () => {
     expect(d).toBeCloseTo(25.13260365, 8);
   });
 
-  it("Should return a correct Talib Stoch", () => {
+  it("Should return a correct value of Talib Stochastic RSI (STOCHRSI)", () => {
     const obj = new TechnicalIndicators();
-    const indicator = obj.STOCH(
-      klines.getHighs(),
-      klines.getLows(),
+    let indicator = obj.stochrsi(
       klines.getCloses(),
       14,
-      1,
+      14,
       3,
-      0,
-      0
+      3,
+      -1
     );
-    const k = indicator.K[indicator.K.length - 1];
-    const d = indicator.D[indicator.D.length - 1];
-    expect(k).toBeCloseTo(26.19047619, 8);
-    expect(d).toBeCloseTo(26.98412698, 8);
-  });
+    /* foud a little difference from Binance */
+    expect(indicator.K).toBeCloseTo(28.4400, 4);
+    expect(indicator.D).toBeCloseTo(25.1326, 4);
 
+    indicator = obj.stochrsi(
+      klines.getCloses(),
+      29,
+      29,
+      7,
+      7,
+      -2
+    );
+    /* foud a little difference from Binance */
+    expect(indicator.K).toBeCloseTo(8.3627, 4);
+    expect(indicator.D).toBeCloseTo(10.3954, 4);
+
+  });
   it("Should return a correct Array Talib Chaikin Oscilator (ADOSC)", () => {
     const obj = new TechnicalIndicators();
     const indicator = obj.ADOSC(
@@ -194,4 +213,47 @@ describe("Indicators Tests", () => {
     );
     expect(indicator).toBeCloseTo(-27881.41588055);
   });
+
+
+  it("Should return a correct Array Stochastic (STOCH)", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.STOCH(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      14,
+      1,
+      3
+    );
+    const k = indicator.K[indicator.K.length - 1];
+    const d = indicator.D[indicator.D.length - 1];
+    expect(k).toBeCloseTo(26.19047619, 8);
+    expect(d).toBeCloseTo(26.98412698, 8);
+  });
+  it("Should return a correct value of Talib Stochastic (STOCH)", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.stoch(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      29,
+      3,
+      5,
+      -1
+    );
+    expect(indicator.K).toBeCloseTo(30.80808081, 8);
+    expect(indicator.D).toBeCloseTo(28.44715815, 8);
+    indicator = obj.stoch(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      29,
+      3,
+      5,
+      -3
+    );
+    expect(indicator.K).toBeCloseTo(28.78787879, 8);
+    expect(indicator.D).toBeCloseTo(32.99610292, 8);
+  });
+
 });

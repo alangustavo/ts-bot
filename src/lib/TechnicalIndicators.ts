@@ -2,6 +2,14 @@ import { StochasticRSI } from "technicalindicators";
 var talib = require("../../node_modules/talib");
 
 export default class TechnicalIndicators {
+  /**
+   * 
+   * @param closes 
+   * @param fastPeriod 
+   * @param slowPeriod 
+   * @param signalPeriod 
+   * @returns { MACD: number[]; MACDSignal: number[]; MACDHist: number[]; }
+   */
   MACD(
     closes: number[],
     fastPeriod: number,
@@ -23,7 +31,15 @@ export default class TechnicalIndicators {
       MACDHist: calc.result.outMACDHist,
     };
   }
-
+  /**
+   * 
+   * @param closes 
+   * @param fastPeriod 
+   * @param slowPeriod 
+   * @param signalPeriod 
+   * @param index 
+   * @returns { MACD: number; MACDSignal: number; MACDHist: number; }
+   */
   macd(
     closes: number[],
     fastPeriod: number,
@@ -38,6 +54,14 @@ export default class TechnicalIndicators {
     return { MACD: i.MACD[index], MACDHist: i.MACDHist[index], MACDSignal: i.MACDSignal[index] };
   }
 
+  /**
+   * 
+   * @param highs 
+   * @param lows 
+   * @param closes 
+   * @param period 
+   * @returns number[]
+   */
   WILLR(
     highs: number[],
     lows: number[],
@@ -56,7 +80,31 @@ export default class TechnicalIndicators {
     // console.log();
     return calc.result.outReal;
   }
-
+  /**
+   * 
+   * @param highs 
+   * @param lows 
+   * @param closes 
+   * @param period 
+   * @param index 
+   * @returns number
+   */
+  willr(highs: number[],
+    lows: number[],
+    closes: number[],
+    period: number = 14, index: number = -1): number {
+    let i = this.WILLR(highs, lows, closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @returns 
+   */
   SMA(closes: number[], period: number = 14): number[] {
     const calc = talib.execute({
       name: "SMA",
@@ -67,6 +115,13 @@ export default class TechnicalIndicators {
     });
     return calc.result.outReal;
   }
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @param index 
+   * @returns 
+   */
   sma(closes: number[], period: number = 14, index: number = -1): number {
     let i = this.SMA(closes, period);
     if (index < 0) {
@@ -74,7 +129,12 @@ export default class TechnicalIndicators {
     }
     return i[index];
   }
-
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @returns number[]
+   */
   EMA(closes: number[], period: number = 14): number[] {
     const calc = talib.execute({
       name: "EMA",
@@ -85,6 +145,13 @@ export default class TechnicalIndicators {
     });
     return calc.result.outReal;
   }
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @param index
+   * @returns number
+   */
   ema(closes: number[], period: number, index: number = -1): number {
     let i = this.EMA(closes, period);
     if (index < 0) {
@@ -92,7 +159,12 @@ export default class TechnicalIndicators {
     }
     return i[index];
   }
-
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @returns 
+   */
   DEMA(closes: number[], period: number = 14): number[] {
     const calc = talib.execute({
       name: "DEMA",
@@ -103,6 +175,13 @@ export default class TechnicalIndicators {
     });
     return calc.result.outReal;
   }
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @param index 
+   * @returns 
+   */
   dema(closes: number[], period: number, index: number = -1): number {
     let i = this.DEMA(closes, period);
     if (index < 0) {
@@ -110,6 +189,13 @@ export default class TechnicalIndicators {
     }
     return i[index];
   }
+
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @returns 
+   */
 
   TEMA(closes: number[], period: number = 14): number[] {
     const calc = talib.execute({
@@ -121,6 +207,14 @@ export default class TechnicalIndicators {
     });
     return calc.result.outReal;
   }
+
+  /**
+   * 
+   * @param closes 
+   * @param period 
+   * @param index 
+   * @returns 
+   */
   tema(closes: number[], period: number, index: number = -1): number {
     let i = this.TEMA(closes, period);
     if (index < 0) {
@@ -153,6 +247,7 @@ export default class TechnicalIndicators {
     }
     return i[index];
   }
+
   /**
    * Calculate a technicalindicators library Stochastic Relative Strength Indicator (Diferent from Binance)
    * @param closes Closes Prices Array
@@ -183,6 +278,29 @@ export default class TechnicalIndicators {
     return { K: k, D: d, stochRSI: s };
   }
 
+
+  /**
+   * 
+   * @param closes 
+   * @param rsiPeriod 
+   * @param stochasticPeriod 
+   * @param kPeriod 
+   * @param dPeriod 
+   * @param index 
+   * @returns 
+   */
+  tirsi(closes: number[],
+    rsiPeriod = 14,
+    stochasticPeriod = 14,
+    kPeriod = 3,
+    dPeriod = 3,
+    index: number = -1): { K: number, D: number, stochRSI: number; } {
+    let i = this.TISRSI(closes, rsiPeriod, stochasticPeriod, kPeriod, dPeriod);
+    if (index < 0) {
+      index += i.D.length;
+    }
+    return { K: i.K[index], D: i.D[index], stochRSI: i.stochRSI[index] };
+  };
   /**
    * Calculate a Talib Stochastic Relative Strength Indicator - (Binance Like)
    * @param closes Closes Prices Array
@@ -203,6 +321,20 @@ export default class TechnicalIndicators {
     return this.STOCH(rsi, rsi, rsi, lengthStock, smoothK, smoothD, 0, 0);
   }
 
+  stochrsi(
+    closes: number[],
+    lengthRSI: number = 14,
+    lengthStock: number = 14,
+    smoothK: number = 3,
+    smoothD: number = 3,
+    index: number = -1): { K: number, D: number; } {
+    let i = this.STOCHRSI(closes, lengthRSI, lengthStock, smoothK, smoothD);
+    if (index < 0) {
+      index += i.D.length;
+    }
+    return { K: i.K[index], D: i.D[index] };
+  };
+
   /**
    * Calculate a Talib Stochastic Indicator- (Binance Like)
    * @param highs Highs Prices Array
@@ -220,10 +352,10 @@ export default class TechnicalIndicators {
     lows: number[],
     closes: number[],
     fastkPeriod: number = 14,
-    slowKPeriod: number = 14,
+    slowKPeriod: number = 1,
     slowDPeriod: number = 3,
-    slowK_MAType = 3,
-    slowD_MAType = 3
+    slowK_MAType = 0,
+    slowD_MAType = 0
   ): { K: number[]; D: number[]; } {
     const calc = talib.execute({
       name: "STOCH",
@@ -241,6 +373,20 @@ export default class TechnicalIndicators {
     });
     return { K: calc.result.outSlowK, D: calc.result.outSlowD };
   }
+  stoch(
+    highs: number[],
+    lows: number[],
+    closes: number[],
+    fastkPeriod: number = 14,
+    slowKPeriod: number = 1,
+    slowDPeriod: number = 3,
+    index: number = -1): { K: number, D: number; } {
+    let i = this.STOCH(highs, lows, closes, fastkPeriod, slowKPeriod, slowDPeriod, 0, 0);
+    if (index < 0) {
+      index += i.D.length;
+    }
+    return { K: i.K[index], D: i.D[index] };
+  };
 
   ADOSC(
     highs: number[],
@@ -277,4 +423,49 @@ export default class TechnicalIndicators {
     return i[index];
   }
 
+  /**
+ * 
+ * @param highs 
+ * @param lows 
+ * @param closes 
+ * @param period 
+ * @returns number[]
+ */
+  MFI(
+    highs: number[],
+    lows: number[],
+    closes: number[],
+    period: number = 14
+  ): number[] {
+    const calc = talib.execute({
+      name: "MFI",
+      high: highs,
+      low: lows,
+      close: closes,
+      startIdx: 0,
+      endIdx: highs.length - 1,
+      optInTimePeriod: period,
+    });
+    // console.log();
+    return calc.result.outReal;
+  }
+  /**
+   * 
+   * @param highs 
+   * @param lows 
+   * @param closes 
+   * @param period 
+   * @param index 
+   * @returns number
+   */
+  mfi(highs: number[],
+    lows: number[],
+    closes: number[],
+    period: number = 14, index: number = -1): number {
+    let i = this.MFI(highs, lows, closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
 }

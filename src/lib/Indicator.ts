@@ -6,7 +6,7 @@ import { Signal } from "./IStrategy";
 const db = sqlite("./data/indicators.db");
 
 export default abstract class Indicator implements Observer {
-    private _interval: string;
+    private _interval: BinanceInterval;
     private _symbol: string;
     private _tableCreated = false;
     private id!: number;
@@ -59,7 +59,12 @@ export default abstract class Indicator implements Observer {
         db.prepare(sql).run();
     }
 
+    getSymbol(): string {
+        return this._symbol;
+    }
+
+    getInterval(): BinanceInterval {
+        return this._interval;
+    }
     abstract calculate(klines: Klines): Signal;
-
-
 }

@@ -30,6 +30,7 @@ export default class ADOSC621EMA21 extends Indicator {
             return Signal.WAIT;
         }
     }
+}
 
 /**
  * $ema = trader_ema($opens, 21);
