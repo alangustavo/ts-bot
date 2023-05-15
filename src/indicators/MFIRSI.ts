@@ -6,25 +6,27 @@ import { Signal } from "../lib/IStrategy";
 
 export default class MFIRSI extends Indicator {
     MFI!: number;
-    SRSI!: { K: number, D: number; };
     AVGSRSI!: number;
+    SRSI_D!: number;
+    SRSI_K!: number;
+    TEMA56!: number;
 
-    constructor(symbol: string, interval: BinanceInterval) {
-        super(symbol, interval);
-    }
     calculate(k: Klines): Signal {
         const t = new TechnicalIndicators();
-        const price = k.getPrice();
-
-        this.SRSI = t.stochrsi(k.getHighs(), k.getLows(), k.getCloses(), k.getVolumes(), 6, 21, -1);
-        this.MFI = t.mfi(k.getHighs(), k.getLows(), k.getCloses(), 14);
-        this.AVGSRSI = (this.SRSI.K + this.SRSI.D) / 2;
-        if (this.MFI < 20 && this.AVGSRSI < 10) {
+        let price = k.getPrice();
+        let srsi = t.stochrsi(k.getCloses(), 14, 14, 3, 3);
+        this.SRSI_D = srsi.D;
+        this.SRSI_K = srsi.K;
+        this.MFI = t.mfi(k.getHighs(), k.getLows(), k.getCloses(), k.getVolumes(), 14);
+        this.TEMA56 = t.tema(k.getCloses(), 56);
+        this.AVGSRSI = (this.SRSI_K + this.SRSI_D) / 2;
+        if (this.MFI < 20 && this.AVGSRSI < 10 && price > this.TEMA56) {
             return Signal.BUY;
         } else if (this.MFI > 80 && this.AVGSRSI > 90) {
             return Signal.SELL;
         } else {
             return Signal.WAIT;
         }
+
     }
 }

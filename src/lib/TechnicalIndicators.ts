@@ -289,7 +289,7 @@ export default class TechnicalIndicators {
    * @param index 
    * @returns 
    */
-  tirsi(closes: number[],
+  tisrsi(closes: number[],
     rsiPeriod = 14,
     stochasticPeriod = 14,
     kPeriod = 3,
@@ -409,7 +409,8 @@ export default class TechnicalIndicators {
     });
     return calc.result.outReal;
   }
-  adosc(highs: number[],
+  adosc(
+    highs: number[],
     lows: number[],
     closes: number[],
     volumes: number[],
@@ -435,6 +436,7 @@ export default class TechnicalIndicators {
     highs: number[],
     lows: number[],
     closes: number[],
+    volumes: number[],
     period: number = 14
   ): number[] {
     const calc = talib.execute({
@@ -442,6 +444,7 @@ export default class TechnicalIndicators {
       high: highs,
       low: lows,
       close: closes,
+      volume: volumes,
       startIdx: 0,
       endIdx: highs.length - 1,
       optInTimePeriod: period,
@@ -454,18 +457,237 @@ export default class TechnicalIndicators {
    * @param highs 
    * @param lows 
    * @param closes 
+   * @param volumes 
    * @param period 
    * @param index 
    * @returns number
    */
-  mfi(highs: number[],
+  mfi(
+    highs: number[],
     lows: number[],
     closes: number[],
-    period: number = 14, index: number = -1): number {
-    let i = this.MFI(highs, lows, closes, period);
+    volumes: number[],
+    period: number = 14,
+    index: number = -1): number {
+
+    let i = this.MFI(highs, lows, closes, volumes, period);
     if (index < 0) {
       index += i.length;
     }
     return i[index];
   }
+
+  /**
+  * 
+  * @param closes 
+  * @param volumes
+  * @param period 
+  * @returns number[]
+  */
+  OBV(
+    closes: number[],
+    volumes: number[],
+    period: number = 14
+  ): number[] {
+    const calc = talib.execute({
+      name: "OBV",
+      inReal: closes,
+      volume: volumes,
+      startIdx: 0,
+      endIdx: closes.length - 1
+    });
+    // console.log();
+    return calc.result.outReal;
+  }
+  /**
+   * @param closes 
+   * @param volumes 
+   * @param period 
+   * @param index 
+   * @returns number
+   */
+  obv(
+    closes: number[],
+    volumes: number[],
+    index: number = -1): number {
+
+    let i = this.OBV(closes, volumes);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+  HT_DCPERIOD(closes: number[]): number[] {
+    const calc = talib.execute({
+      name: "HT_DCPERIOD",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1
+    });
+    // console.log();
+    return calc.result.outReal;
+  }
+
+  ht_dcperiod(closes: number[], index: number = -1): number {
+    let i = this.HT_DCPERIOD(closes);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+
+  HT_DCPHASE(closes: number[]): number[] {
+    const calc = talib.execute({
+      name: "HT_DCPHASE",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1
+    });
+    // console.log();
+    return calc.result.outReal;
+  }
+
+  ht_dcphase(closes: number[], index: number = -1): number {
+    let i = this.HT_DCPHASE(closes);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+
+
+  HT_PHASOR(closes: number[]): number[] {
+    const calc = talib.execute({
+      name: "HT_PHASOR",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1
+    });
+    // console.log();
+    return calc.result.outReal;
+  }
+
+  ht_phasor(closes: number[], index: number = -1): number {
+    let i = this.HT_PHASOR(closes);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+
+
+  HT_SINE(inputValues: number[], period: number = 3): number[] {
+    const out = new Array<number>(inputValues.length);
+
+    let iTrend: number = 0;
+    let iPhase: number = 0;
+    let i: number = 0;
+
+    const { sin, cos, PI } = Math;
+
+    const degreeToRadian = (deg: number) => deg * (PI / 180);
+
+    const radianToDegree = (rad: number) => rad * (180 / PI);
+
+    const calcEMAFactor = (numPeriods: number) => 2 / (numPeriods + 1);
+
+    const calcEMA = (prevEMA: number, value: number, factor: number) =>
+      prevEMA + factor * (value - prevEMA);
+
+    const calcTrend = (value: number, prevTrend: number, prevPhase: number) => {
+      const radianPhase = degreeToRadian(prevPhase);
+      const quadrature = calcEMA(prevTrend, sin(radianPhase), calcEMAFactor(period));
+      const inPhase = calcEMA(prevTrend, cos(radianPhase), calcEMAFactor(period));
+      return radianToDegree(Math.atan2(quadrature, inPhase));
+    };
+
+    for (i = 0; i < inputValues.length; i++) {
+      const currValue = inputValues[i];
+      if (i < period) {
+        out[i] = -1;
+      } else {
+        if (i === period) {
+          // Initialize iTrend and iPhase with the SMA of the input values
+          let sma = 0;
+          for (let j = 0; j < period; j++) {
+            sma += inputValues[i - j];
+          }
+          sma /= period;
+          iTrend = sma;
+          iPhase = sma;
+        } else {
+          iTrend = calcTrend(currValue, iTrend, iPhase);
+          iPhase = calcTrend(currValue, iPhase, iTrend);
+        }
+        out[i] = iTrend;
+      }
+    }
+
+    return out;
+  }
+
+  ht_sine(closes: number[], period: number, index: number = -1): number {
+    let i = this.HT_SINE(closes, period);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+  HT_TRENDLINE(closes: number[]): number[] {
+    const calc = talib.execute({
+      name: "HT_TRENDLINE",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1
+    });
+    // console.log();
+    return calc.result.outReal;
+  }
+
+  ht_trendline(closes: number[], index: number = -1): number {
+    let i = this.HT_TRENDLINE(closes);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+  HT_TRENDMODE(closes: number[]): number[] {
+    const calc = talib.execute({
+      name: "HT_TRENDMODE",
+      inReal: closes,
+      startIdx: 0,
+      endIdx: closes.length - 1
+    });
+    // console.log();
+    return calc.result.outReal;
+  }
+
+  ht_trendmode(closes: number[], index: number = -1): number {
+    let i = this.HT_TRENDMODE(closes);
+    if (index < 0) {
+      index += i.length;
+    }
+    return i[index];
+  }
+
+  fibonacciRetracement(high: number, low: number, levels: number): number[] {
+    const retracementLevels = [];
+    const range = high - low;
+    const levelSize = range / levels;
+
+    for (let i = 0; i <= levels; i++) {
+      const level = high - (i * levelSize);
+      const retracement = ((high - level) / range) * 100;
+      retracementLevels.push(retracement);
+    }
+
+    return retracementLevels;
+  }
+
 }

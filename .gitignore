@@ -104,7 +104,7 @@ dist
 .tern-port
 
 *.csv
-
+*.CSV
 
 indicators.db
 .db-shm

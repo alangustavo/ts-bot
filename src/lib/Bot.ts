@@ -25,6 +25,11 @@ export default class Bot {
       );
     }
     this.dataSource.attach(indicator);
+
+  }
+
+  addIndicator(indicator: Indicator): void {
+    this.dataSource.attach(indicator);
   }
   update(_klines: Klines): void { }
 }

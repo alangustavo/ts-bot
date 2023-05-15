@@ -179,6 +179,48 @@ describe("Indicators Tests", () => {
     expect(indicator.D).toBeCloseTo(10.3954, 4);
 
   });
+
+
+  it("Should return a correct Stochastic Relative Strength Indicator(Diferent from Binance - Other Library)", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.TISRSI(klines.getCloses(), 29, 29, 7, 7);
+    const k = indicator.K[indicator.K.length - 1];
+    const d = indicator.D[indicator.D.length - 1];
+    expect(k).toBeCloseTo(7.8948, 4);
+    expect(d).toBeCloseTo(9.4131, 4);
+  });
+
+  it("Should return a correct value of Talib Stochastic RSI (STOCHRSI)", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.tisrsi(
+      klines.getCloses(),
+      14,
+      14,
+      3,
+      3,
+      -1
+    );
+    /* foud a little difference from Binance */
+    expect(indicator.K).toBeCloseTo(28.4326, 4);
+    expect(indicator.D).toBeCloseTo(25.1277, 4);
+
+    indicator = obj.tisrsi(
+      klines.getCloses(),
+      29,
+      29,
+      7,
+      7,
+      -2
+    );
+    /* foud a little difference from Binance */
+    expect(indicator.K).toBeCloseTo(8.3483, 4);
+    expect(indicator.D).toBeCloseTo(10.3859, 4);
+
+  });
+
+
+
+
   it("Should return a correct Array Talib Chaikin Oscilator (ADOSC)", () => {
     const obj = new TechnicalIndicators();
     const indicator = obj.ADOSC(
@@ -254,6 +296,74 @@ describe("Indicators Tests", () => {
     );
     expect(indicator.K).toBeCloseTo(28.78787879, 8);
     expect(indicator.D).toBeCloseTo(32.99610292, 8);
+  });
+
+  it("Should return a correct Array Talib Money Flow Indicator (MFI)", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.MFI(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      klines.getVolumes(),
+      14
+    );
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(34.09550966, 8);
+  });
+
+  it("Should return a correct value of Talib Money Flow Indicator (MFI)", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.mfi(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      klines.getVolumes(),
+      19, -1
+    );
+    expect(indicator).toBeCloseTo(34.89029944, 8);
+    indicator = obj.mfi(
+      klines.getHighs(),
+      klines.getLows(),
+      klines.getCloses(),
+      klines.getVolumes(),
+      19, -2
+    );
+    expect(indicator).toBeCloseTo(31.12091625, 8);
+
+  });
+
+  it("Should return a correct Array Talib On Balance Volume (OBV)", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.OBV(
+      klines.getCloses(),
+      klines.getVolumes()
+    );
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(-149644.1799999973, 8);
+  });
+
+  it("Should return a correct value of Talib On Balance Volume (OBV)", () => {
+    const obj = new TechnicalIndicators();
+    let indicator = obj.obv(
+      klines.getCloses(),
+      klines.getVolumes(),
+      -3
+    );
+    expect(indicator).toBeCloseTo(-151550.66, 8);
+    indicator = obj.obv(
+      klines.getCloses(),
+      klines.getVolumes(),
+      -2
+    );
+    expect(indicator).toBeCloseTo(-143764.66, 8);
+
+  });
+  it("Should return a correct Array Talib HT_SINE (HT_SINE)", () => {
+    const obj = new TechnicalIndicators();
+    const indicator = obj.HT_SINE(klines.getCloses(), 499);
+    console.log(indicator);
+    const i = indicator[indicator.length - 1];
+    expect(i).toBeCloseTo(30, 8);
   });
 
 });

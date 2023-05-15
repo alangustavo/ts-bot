@@ -10,6 +10,7 @@ export default class BinanceHistoricalKlines {
   end: Date;
   table: string;
   limit: number;
+  count: number = 0;
   dbpath: string;
   constructor(
     symbol: string,
@@ -33,7 +34,11 @@ export default class BinanceHistoricalKlines {
     await this.getHistoricalKlinesFromBinance();
     const ini = this.ini.getTime();
     const end = this.end.getTime();
-    const sql = `SELECT * FROM ${this.table} WHERE openTime >= ${ini} AND openTime <= ${end} ORDER BY openTime;`;
+
+    let sql = `SELECT count(*) AS K FROM ${this.table} WHERE openTime >= ${ini} AND openTime < ${end}`;
+    let rows: any = db.prepare(sql).get();
+    this.count = rows['K'];
+    sql = `SELECT * FROM ${this.table} WHERE openTime >= ${ini} AND openTime <= ${end} ORDER BY openTime;`;
     const stmt = db.prepare(sql);
     return stmt;
   }
@@ -58,7 +63,7 @@ export default class BinanceHistoricalKlines {
                ${k.takerQuoteAssetVolume}),`;
       });
       sql = sql.slice(0, -1);
-      db.exec(sql);
+      await db.exec(sql);
       console.log("The data has been saved in the database!");
     } else {
       console.log("No Historical Data From Binance in Period.");
