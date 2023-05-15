@@ -109,3 +109,5 @@ dist
 indicators.db
 .db-shm
 .db-wal
+
+*.log
