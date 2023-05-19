@@ -96,5 +96,6 @@ describe("Kline Tests", () => {
     expect(obj.trades).toEqual(905);
     expect(obj.takerBuyBaseAssetVolume).toEqual(24915.85);
     expect(obj.takerBuyQuoteAssetVolume).toEqual(96347.377683);
+    expect(obj.openTime.getTime()).toEqual(1611964800000);
   });
 });

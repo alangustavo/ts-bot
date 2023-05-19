@@ -17,9 +17,14 @@ export default class Klines {
     });
   }
   addKline(kline: Kline): void {
-    this.klines.push(kline);
-    if (this.klines.length > this.limit) {
-      this.klines.shift();
+    if (this.klines.length > 0 && kline.openTime.getTime() > this.getId()) {
+      this.klines.push(kline);
+      if (this.klines.length > this.limit) {
+        this.klines.shift();
+      }
+    } else {
+      this.klines.pop();
+      this.klines.push(kline);
     }
   }
   getOpenTimes(): Array<Date> {

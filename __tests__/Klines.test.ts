@@ -14,22 +14,35 @@ describe("Klines Tests", () => {
     expect(obj.getCloses().length).toEqual(0);
     obj.addKline(kline);
     expect(obj.getCloses().length).toEqual(1);
+    kline = new Kline([2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     obj.addKline(kline);
     expect(obj.getCloses().length).toEqual(2);
+    kline = new Kline([3, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     obj.addKline(kline);
     expect(obj.getCloses().length).toEqual(3);
     obj.addKline(kline);
     expect(obj.getCloses().length).toEqual(3);
   });
 
+  it("It must not include the same openTime Kline.", () => {
+    const obj = new Klines(3);
+    let kline = new Kline([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    expect(obj.getCloses().length).toEqual(0);
+    obj.addKline(kline);
+    expect(obj.getCloses().length).toEqual(1);
+    obj.addKline(kline);
+    expect(obj.getCloses().length).toEqual(1);
+  });
+
   it("It must return array from klines.", () => {
     const obj = new Klines(3);
     let kline = new Kline([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     obj.addKline(kline);
+    kline = new Kline([1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     obj.addKline(kline);
+    kline = new Kline([2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     obj.addKline(kline);
-    obj.addKline(kline);
-    expect(obj.getOpenTimes()).toEqual([new Date(0), new Date(0), new Date(0)]);
+    expect(obj.getOpenTimes()).toEqual([new Date(0), new Date(1), new Date(2)]);
     expect(obj.getOpens()).toEqual([1, 1, 1]);
     expect(obj.getHighs()).toEqual([2, 2, 2]);
     expect(obj.getLows()).toEqual([3, 3, 3]);

@@ -1,37 +1,43 @@
 import Subject from "./ISubject";
-
+import Log from "./Log";
 const WebSocket = require("ws");
 export default class Service extends Subject {
     // static limit: number = 0;
-    ws: WebSocket;
+    ws!: WebSocket;
     url: string;
     stream: string;
+    log: Log;
+    static weight: number = 0;
     /**
      * Please check the Binance API Documentation https://binance-docs.github.io/apidocs/websocket_api/en/#change-log
      * There is a limit of 300 connections per attempt every 5 minutes.
      * The connection is per IP address.
      * @param stream 
      */
-    constructor(stream: string) {
+    constructor(stream: string, weight: number) {
         super();
         this.stream = stream;
+        weight += weight;
         this.url = `${process.env.STREAM_URL}\\${stream}`;
-        this.restart();
+        this.log = new Log(`websocket-${stream}.log`);
+        this.start();
     }
 
 
-    restart() {
-        try {
-            this.ws = new WebSocket(this.url);
-        } catch (error) {
-
-        }
-
+    start() {
+        this.ws = new WebSocket(this.url);
+        WebSocket.on('error', (error: { message: string; }) => {
+            this.log.write(`Connection Error:${error.message}`);
+        });
         this.config();
     }
 
     config() {
         this.configClose();
+    }
+
+    send(message: string) {
+        this.ws.send(message);
     }
 
     configClose() {
@@ -79,22 +85,11 @@ export default class Service extends Subject {
                 reason =
                     "The connection was closed due to a failure to perform a TLS handshake (e.g., the server certificate can't be verified).";
             else reason = "Unknown reason";
-
-            const d = new Date();
-            let dataFechaento = d.toLocaleString("pt-BR", {
-                timeZone: "UTC",
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                hour12: false,
-                minute: "2-digit",
-                second: "2-digit",
-            });
-            console.log(
-                `${dataFechaento} - Connection closed:  ${reason} - Reopen Now!`
-            );
-            this.restart();
+            reason = `CONNECTION CLOSE:${reason}` + reason;
+            this.notify(reason);
+            this.log.write(reason);
+            this.start();
         };
     }
+
 }

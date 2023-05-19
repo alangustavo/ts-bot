@@ -1,15 +1,13 @@
-// import Klines from "../src/lib/Klines";
-// import Kline500 from "../testdata/data";
-
-const klines = new Klines();
-// klines.addKlinesFromArray(Kline500);
+import WebSocket from 'ws';
 
 
+const url1 = 'wss://stream.binance.com:9443/ws/solusdt@kline_1m';
+const bs1 = new WebSocket(url1);
 
 
-function 
+bs1.onmessage = (event) => {
+    const k = JSON.parse(event.data).k;
 
-const inputValues = [1.0, 2.0, 3.0, 4.0, 5.0];
-const period = 3;
+    console.log(k);
+};
 
-console.log(HT_SINE(inputValues, period));

@@ -1,4 +1,7 @@
 import fs from 'fs';
+const { Telegraf } = require('telegraf');
+
+
 
 export default class Log {
     logFile: string;
