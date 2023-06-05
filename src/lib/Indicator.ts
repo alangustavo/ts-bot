@@ -93,7 +93,7 @@ export default abstract class Indicator implements Observer {
             }
         } else {
             this.PL = this.CLOSE_PRICE / this.BUY_PRICE;
-            let trailing_price = this.CLOSE_PRICE - (this.CLOSE_PRICE * this._trailingStop);
+            let trailing_price = this.CLOSE_PRICE * this._trailingStop;
             // Ajusto o TrailingStop
             if (trailing_price > this.TRAILING_STOP) {
                 this.TRAILING_STOP = trailing_price;
@@ -112,7 +112,7 @@ export default abstract class Indicator implements Observer {
             if (this.PL < this._stopLoss) {
                 this._signal = Signal.STOPLOSS;
                 this.closePostion();
-                // this._wait = 20;
+                this._wait = 20;
                 return;
             }
             if (this.CLOSE_PRICE < this.TRAILING_STOP && this.PL > 1.0021) {

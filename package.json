@@ -7,7 +7,8 @@
     "test": "jest --setupFiles dotenv/config",
     "compile": "npx tsc",
     "start": "npx ts-node ./src/index.ts",
-    "sine": "npx ts-node ./src/sine.ts"
+    "sine": "npx ts-node ./src/sine.ts",
+    "real": "npx ts-node ./src/real.ts"
   },
   "keywords": [
     "nodejs",
